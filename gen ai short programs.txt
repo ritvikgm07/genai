@@ -1,0 +1,218 @@
+PROGRAM 1
+
+import gensim.downloader as api
+
+# Load small pre-trained model (50-dimensional GloVe vectors)
+model = api.load("glove-wiki-gigaword-50")
+
+# Display word vector
+print("Vector for 'king':", model['king'])
+
+# Vector arithmetic: king - man + woman ≈ queen
+result = model.most_similar(positive=['king', 'woman'], negative=['man'], topn=1)
+print("king - man + woman =", result[0])
+
+---------END---------
+
+PROGRAM 2
+
+
+import gensim.downloader as api
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+# Load GloVe embeddings (50d)
+model = api.load("glove-wiki-gigaword-50")
+
+# Sports-related words
+words = ['football', 'soccer', 'tennis', 'cricket', 'basketball', 
+         'goal', 'player', 'coach', 'tournament', 'score']
+
+# Get vectors for PCA
+vectors = [model[word] for word in words]
+
+# Reduce to 2D
+pca = PCA(n_components=2)
+reduced = pca.fit_transform(vectors)
+
+# Plot
+plt.figure(figsize=(8,6))
+for i, word in enumerate(words):
+    x, y = reduced[i]
+    plt.scatter(x, y)
+    plt.text(x+0.01, y+0.01, word)
+plt.title("Word Embeddings - Sports Domain")
+plt.show()
+
+# Find 5 similar words to a given input
+similar = model.most_similar('football', topn=5)
+print("Words similar to 'football':", similar)
+
+
+---------END----------
+
+PROGRAM 3
+
+from gensim.models import Word2Vec
+
+# Small medical corpus
+corpus = [
+    "the patient was prescribed antibiotics",
+    "the doctor diagnosed the disease",
+    "treatment includes rest and medication",
+    "infection spread through the bloodstream",
+    "nurse administered the injection",
+    "surgery was performed by the surgeon"
+]
+
+# Preprocess text
+sentences = [sentence.lower().split() for sentence in corpus]
+
+# Train Word2Vec model
+model = Word2Vec(sentences, vector_size=50, window=2, min_count=1, workers=1)
+
+# Show similar words in the medical context
+print("Words similar to 'doctor':", model.wv.most_similar('doctor'))
+
+
+----------END----------
+
+PROGRAM 4
+
+
+import gensim.downloader as api
+
+# Load small word vector model
+model = api.load("glove-wiki-gigaword-50")
+
+# Original prompt
+prompt = "Explain the benefits of exercise"
+
+# Pick keyword and find similar words
+keyword = "exercise"
+similar_words = model.most_similar(keyword, topn=3)
+related = [w for w, _ in similar_words]
+
+# Enrich the prompt
+enriched_prompt = prompt + " including " + ", ".join(related)
+
+# Print both prompts
+print("Original Prompt:\n", prompt)
+print("\nEnriched Prompt:\n", enriched_prompt)
+
+
+----------END-----------
+
+PROGRAM 5
+
+import gensim.downloader as api
+import random
+
+# Load word embeddings
+model = api.load("glove-wiki-gigaword-50")
+
+# Seed word
+seed = "adventure"
+
+# Get similar words
+similar = [w for w, _ in model.most_similar(seed, topn=5)]
+
+# Create a simple paragraph
+paragraph = f"Once upon a time, an {seed} led to a journey full of {similar[0]}, {similar[1]}, and {similar[2]}. "
+paragraph += f"The hero met a {similar[3]} ally and overcame a {similar[4]} challenge."
+
+print("Generated Paragraph:\n", paragraph)
+
+
+---------END---------
+
+
+PROGRAM 6
+
+pip install torch transformers
+
+from transformers import pipeline
+import torch  # Required for backend (even if you don't use it directly)
+
+# Load the sentiment analysis pipeline
+sentiment = pipeline("sentiment-analysis")
+
+# Example sentences
+texts = [
+    "This movie was fantastic!",
+    "I didn't like the food at all.",
+    "It was just okay, nothing great."
+]
+
+# Analyze sentiment
+for text in texts:
+    result = sentiment(text)[0]
+    print(f"Text: {text}\nSentiment: {result['label']} (Score: {result['score']:.2f})\n")
+
+---------END---------
+
+
+PROGRAM 7
+from transformers import pipeline
+
+# Load the summarization model
+summarizer = pipeline("summarization")
+
+# Input passage
+text = """
+Artificial Intelligence (AI) is a branch of computer science that aims to create machines 
+that can mimic human intelligence. It has applications in various fields such as healthcare, 
+finance, education, and transportation. With the rise of big data and powerful computing, 
+AI systems have become more efficient and widespread, transforming how industries operate.
+"""
+
+# Summarize
+summary = summarizer(text, max_length=50, min_length=25, do_sample=False)
+
+print("Summary:\n", summary[0]['summary_text'])
+
+
+----------END-----------
+
+PROGRAM 8
+
+------END------
+
+PROGRAM 9
+
+from pydantic import BaseModel
+
+class Info(BaseModel):
+    founder: str
+    founded: str
+    branches: str
+    employees: str
+    summary: str
+
+# Input (mocked Wikipedia text)
+inst = "IIT Madras"
+text = """
+IIT Madras was founded in 1959 by Prof. Humayun Kabir with help from Germany.
+It has branches across Chennai. Over 1000 faculty and 8500 students work/study here.
+It is a top engineering college in India known for research and innovation.
+"""
+
+# Parse manually (no LLM needed for demo/lab)
+data = Info(
+    founder="Prof. Humayun Kabir",
+    founded="1959",
+    branches="Across Chennai",
+    employees="1000+ faculty, 8500 students",
+    summary="IIT Madras was founded in 1959. Known for innovation. Top engineering college. Based in Chennai."
+)
+
+print(data)
+
+
+-------------END------------
+
+PROGRAM 10
+
+
+
+
